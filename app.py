@@ -38,11 +38,22 @@ def fetch_pdfs():
     return unique
 
 def send_pdf(pdf):
+    # Scarica il PDF
     r = requests.get(pdf['url'])
-    files = {'document': (pdf['title'] + '.pdf', r.content)}
-    data = {'chat_id': CHAT_ID}
-    resp = requests.post(f'https://api.telegram.org/bot{TOKEN}/sendDocument', data=data, files=files)
+    files = {
+        'document': (pdf['title'] + '.pdf', r.content)
+    }
+    data = {
+        'chat_id': CHAT_ID,
+        'caption': pdf['title']  # qui mettiamo il titolo come didascalia
+    }
+    resp = requests.post(
+        f'https://api.telegram.org/bot{TOKEN}/sendDocument',
+        data=data,
+        files=files
+    )
     return resp.ok
+
 
 @app.route('/', methods=['GET'])
 def check_new():
